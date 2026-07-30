@@ -71,9 +71,6 @@ export function LoginScreen({ onSuccess }: LoginScreenProps) {
           >
             IT
           </div>
-          <div style={{ fontSize: 11, letterSpacing: "0.12em", color: "var(--text-muted)", fontWeight: 600 }}>
-            INDUSTRIAS TEXTIL
-          </div>
           <div style={{ fontSize: 19, fontWeight: 700, marginTop: 2, color: "var(--text)" }}>
             Sistema RR.HH
           </div>

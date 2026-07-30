@@ -71,25 +71,11 @@ export function Topbar({ sidebarCollapsed = false, onToggleSidebar, onLogout }: 
         )}
 
         <div style={{ fontSize: 13.5, color: "var(--text-muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-          <span className="hide-on-mobile">Industrias Textil <span style={{ margin: "0 6px" }}>/</span> </span>
           <span style={{ color: "var(--text)", fontWeight: 700 }}>{MODULE_LABELS[state.activeModule]}</span>
         </div>
       </div>
 
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <div
-          className="mono hide-on-mobile"
-          style={{
-            fontSize: 11.5,
-            color: "var(--text-muted)",
-            background: "var(--bg)",
-            border: "1px solid var(--border-light)",
-            padding: "5px 12px",
-            borderRadius: 8,
-          }}
-        >
-          Empresa: Industrias Textil S.A. · Sede: Bogotá
-        </div>
         <div
           style={{
             width: 32,
