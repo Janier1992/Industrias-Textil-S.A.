@@ -41,12 +41,7 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
         }}
       >
         {!collapsed ? (
-          <>
-            <div style={{ fontSize: 11, letterSpacing: "0.12em", color: "oklch(0.65 0.04 200)", fontWeight: 600 }}>
-              INDUSTRIAS TEXTIL
-            </div>
-            <div style={{ fontSize: 17, fontWeight: 700, marginTop: 2, letterSpacing: "-0.01em" }}>Sistema RR.HH</div>
-          </>
+          <div style={{ fontSize: 17, fontWeight: 700, letterSpacing: "-0.01em" }}>Sistema RR.HH</div>
         ) : (
           <div
             style={{
@@ -61,9 +56,9 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
               alignItems: "center",
               justifyContent: "center",
             }}
-            title="Industrias Textil · Sistema RR.HH"
+            title="Sistema RR.HH"
           >
-            IT
+            RH
           </div>
         )}
       </div>
