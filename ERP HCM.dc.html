@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:oklch(0.98 0.004 85);}
+  * { box-sizing: border-box; font-family: 'IBM Plex Sans', sans-serif; }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+  ::-webkit-scrollbar{width:8px;height:8px;}
+  ::-webkit-scrollbar-thumb{background:oklch(0.85 0.01 85);border-radius:4px;}
+  a { color: oklch(0.47 0.09 200); }
+  a:hover { color: oklch(0.4 0.1 200); }
+  input, select { font-family: 'IBM Plex Sans', sans-serif; }
+</style>
+</helmet>
+
+<div style="display:flex;height:100vh;width:100%;background:oklch(0.98 0.004 85);color:oklch(0.22 0.01 85);overflow:hidden;">
+
+  <div style="width:248px;flex-shrink:0;background:oklch(0.16 0.015 230);color:oklch(0.92 0.005 230);display:flex;flex-direction:column;">
+    <div style="padding:22px 20px 18px;border-bottom:1px solid oklch(0.26 0.02 230);">
+      <div style="font-size:11px;letter-spacing:0.12em;color:oklch(0.6 0.03 200);font-weight:600;">INDUSTRIAS TEXTIL</div>
+      <div style="font-size:17px;font-weight:600;margin-top:2px;">ERP · HCM</div>
+    </div>
+    <div style="padding:16px 12px 4px;font-size:10px;letter-spacing:0.1em;color:oklch(0.55 0.02 230);font-weight:600;">MÓDULOS</div>
+    <div style="padding:0 10px;flex:1;overflow-y:auto;">
+      <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="5">
+        <button onClick="{{ item.onSelect }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border-radius:8px;font-size:13.5px;margin-bottom:2px;background:{{ item.bg }};" style-hover="background:oklch(0.22 0.02 230);">
+          <span style="width:22px;height:22px;border-radius:6px;background:{{ item.color }};color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">{{ item.glyph }}</span>
+          <span style="opacity:{{ item.textOpacity }};">{{ item.label }}</span>
+        </button>
+      </sc-for>
+    </div>
+    <div style="padding:14px 16px;border-top:1px solid oklch(0.26 0.02 230);font-size:11.5px;color:oklch(0.6 0.02 230);">
+      Planta Bogotá · Multisede activa
+    </div>
+  </div>
+
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+    <div style="height:56px;flex-shrink:0;border-bottom:1px solid oklch(0.9 0.006 85);background:white;display:flex;align-items:center;justify-content:space-between;padding:0 24px;">
+      <div style="font-size:14px;color:oklch(0.5 0.01 85);">Industrias Textil <span style="margin:0 6px;">/</span> <span style="color:oklch(0.22 0.01 85);font-weight:600;">{{ activeLabel }}</span></div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div class="mono" style="font-size:12px;color:oklch(0.5 0.01 85);background:oklch(0.96 0.005 85);padding:5px 10px;border-radius:6px;">Empresa: Industrias Textil S.A. · Sede: Bogotá</div>
+        <div style="width:32px;height:32px;border-radius:50%;background:oklch(0.47 0.09 200);color:white;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;">RH</div>
+      </div>
+    </div>
+
+    <div style="flex:1;overflow-y:auto;padding:28px 32px 60px;">
+
+      <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <h1 style="font-size:22px;font-weight:700;margin:0 0 20px;">Dashboard Ejecutivo</h1>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;">
+            <sc-for list="{{ execKpis }}" as="k" hint-placeholder-count="4">
+              <div style="background:white;border:1px solid oklch(0.9 0.006 85);border-radius:14px;box-shadow:0 1px 3px oklch(0.2 0.01 85 / 0.05);padding:16px 18px;">
+                <div style="font-size:11px;color:oklch(0.5 0.01 85);margin-bottom:6px;">{{ k.label }}</div>
+                <div class="mono" style="font-size:24px;font-weight:600;">{{ k.value }}</div>
+                <div style="font-size:11.5px;color:{{ k.trendColor }};margin-top:4px;">{{ k.trend }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-bottom:14px;">
+            <div style="background:white;border:1px solid oklch(0.9 0.006 85);border-radius:14px;box-shadow:0 1px 3px oklch(0.2 0.01 85 / 0.05);padding:20px 22px;">
+              <h2 style="font-size:14px;font-weight:700;margin:0 0 16px;">Headcount por planta (en vivo)</h2>
+              <div style="display:flex;align-items:flex-end;gap:20px;height:160px;">
+                <sc-for list="{{ plantBars }}" as="p" hint-placeholder-count="4">
+                  <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:8px;flex:1;height:100%;">
+                    <div class="mono" style="font-size:12px;font-weight:600;">{{ p.value }}</div>
+                    <div style="width:100%;height:{{ p.pct }}%;background:oklch(0.47 0.09 200);border-radius:6px 6px 0 0;"></div>
+                    <div style="font-size:11.5px;color:oklch(0.5 0.01 85);text-align:center;">{{ p.label }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background:white;border:1px solid oklch(0.9 0.006 85);border-radius:14px;box-shadow:0 1px 3px oklch(0.2 0.01 85 / 0.05);padding:20px 22px;display:flex;flex-direction:column;align-items:center;">
+              <h2 style="font-size:14px;font-weight:700;margin:0 0 16px;align-self:flex-start;">Rotación de personal</h2>
+              <div style="width:130px;height:130px;border-radius:50%;background:conic-gradient(oklch(0.62 0.13 40) 0% 8.4%, oklch(0.93 0.006 85) 8.4% 100%);display:flex;align-items:center;justify-content:center;">
+                <div style="width:92px;height:92px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;flex-direction:column;">
+                  <div class="mono" style="font-size:20px;font-weight:700;">8.4%</div>
+                  <div style="font-size:10.5px;color:oklch(0.5 0.01 85);">anual</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:14px;margin-bottom:14px;">
+            <div style="background:white;border:1px solid oklch(0.9 0.006 85);border-radius:14px;box-shadow:0 1px 3px oklch(0.2 0.01 85 / 0.05);padding:20px 22px;display:flex;flex-direction:column;align-items:center;">
+              <h2 style="font-size:14px;font-weight:700;margin:0 0 16px;align-self:flex-start;">Estado del personal</h2>
+              <div style="width:130px;height:130px;border-radius:50%;background:{{ estadoDonutStyle }};margin-bottom:14px;"></div>
+              <div style="display:flex;flex-direction:column;gap:6px;width:100%;">
+                <sc-for list="{{ estadoLegend }}" as="l" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;">
+                    <span style="width:9px;height:9px;border-radius:50%;background:{{ l.color }};flex-shrink:0;"></span>
+                    <span style="flex:1;color:oklch(0.4 0.01 85);">{{ l.label }}</span>
+                    <span class="mono" style="font-weight:600;">{{ l.count }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background:white;border:1px solid oklch(0.9 0.006 85);border-radius:14px;box-shadow:0 1px 3px oklch(0.2 0.01 85 / 0.05);padding:20px 22px;">
+              <h2 style="font-size:14px;font-weight:700;margin:0 0 16px;">Distribución por turno</h2>
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <sc-for list="{{ turnoBars }}" as="t" hint-placeholder-count="4">
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px;"><span>{{ t.label }}</span><span class="mono" style="font-weight:600;">{{ t.count }}</span></div>
+                    <div style="height:10px;background:oklch(0.94 0.004 85);border-radius:6px;overflow:hidden;">
+                      <div style="height:100%;width:{{ t.pct }}%;background:oklch(0.47 0.09 200);border-radius:6px;"></div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:white;border:1px solid oklch(0.9 0.006 85);border-radius:14px;box-shadow:0 1px 3px oklch(0.2 0.01 85 / 0.05);padding:20px 22px;">
+            <h2 style="font-size:14px;font-weight:700;margin:0 0 16px;">Devengado vs. Deducciones (ciclo actual)</h2>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px;"><span>Devengado</span><span class="mono" style="font-weight:600;">{{ payrollCompare.devengado }}</span></div>
+                <div style="height:12px;background:oklch(0.94 0.004 85);border-radius:6px;overflow:hidden;"><div style="height:100%;width:{{ payrollCompare.devengadoPct }}%;background:oklch(0.55 0.12 150);border-radius:6px;"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px;"><span>Deducciones</span><span class="mono" style="font-weight:600;">{{ payrollCompare.deducciones }}</span></div>
+                <div style="height:12px;background:oklch(0.94 0.004 85);border-radius:6px;overflow:hidden;"><div style="height:100%;width:{{ payrollCompare.deduccionesPct }}%;background:oklch(0.6 0.14 40);border-radius:6px;"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isEmpleados }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+            <h1 style="font-size:22px;font-weight:700;margin:0;">Empleados · Expediente Digital</h1>
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div style="font-size:13px;color:oklch(0.5 0.01 85);">{{ employees.length }} colaboradores</div>
+              <button onClick="{{ openFormEmpleados }}" style="all:unset;cursor:pointer;background:oklch(0.47 0.09 200);color:white;font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px;">+ Nuevo empleado</button>
+            </div>
+          </div>
+          <div style="background:white;border:1px solid oklch(0.9 0.006 85);border-radius:14px;box-shadow:0 1px 3px oklch(0.2 0.01 85 / 0.05);overflow:hidden;">
+            <div style="display:grid;grid-template-columns:2fr 1.6fr 1.2fr 1fr 1fr 0.9fr 1fr;padding:11px 20px;font-size:11px;font-weight:600;color:oklch(0.5 0.01 85);border-bottom:1px solid oklch(0.94 0.004 85);">
+              <div>Nombre</div><div>Cargo</div><div>Planta</div><div>Turno</div><div>Antigüedad</div><div>Estado</div><div>Acciones</div>
+            </div>
+            <sc-for list="{{ employees }}" as="e" hint-placeholder-count="8">
+              <div onClick="{{ e.onOpen }}" style="display:grid;grid-template-columns:2fr 1.6fr 1.2fr 1fr 1fr 0.9fr 1fr;padding:13px 20px;font-size:13.5px;border-bottom:1px solid oklch(0.96 0.004 85);cursor:pointer;align-items:center;" style-hover="background:oklch(0.98 0.005 85);">
+                <div style="display:flex;align-items:center;gap:10px;font-weight:600;">
+                  <span style="width:26px;height:26px;border-radius:50%;background:oklch(0.9 0.02 200);color:oklch(0.35 0.06 200);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;">{{ e.iniciales }}</span>
+                  {{ e.nombre }}
+                </div>
+                <div style="color:oklch(0.4 0.01 85);">{{ e.cargo }}</div>
+                <div style="color:oklch(0.4 0.01 85);">{{ e.planta }}</div>
+                <div style="color:oklch(0.4 0.01 85);">{{ e.turno }}</div>
+                <div class="mono" style="color:oklch(0.4 0.01 85);">{{ e.antiguedad }}</div>
+                <div><span style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;background:{{ e.estadoBg }};color:{{ e.estadoColor }};">{{ e.estado }}</span></div>
+                <div style="display:flex;gap:12px;">
+                  <button onClick="{{ e.onEdit }}" style="all:unset;cursor:pointer;font-size:12.5px;font-weight:600;color:oklch(0.47 0.09 200);">Editar</button>
+                  <button onClick="{{ e.onDelete }}" style="all:unset;cursor:pointer;font-size:12.5px;font-weight:600;color:oklch(0.55 0.14 25);">Eliminar</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isNomina }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width:900px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+            <h1 style="font-size:22px;font-weight:700;margin:0;">Nómina · Julio 2026</h1>
+            <div style="display:flex;gap:10px;">
+              <button onClick="{{ openFormNomina }}" style="all:unset;cursor:pointer;background:white;border:1px solid oklch(0.85 0.01 85);color:oklch(0.3 0.01 85);font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px;">+ Nuevo concepto</button>
+              <button onClick="{{ procesarNomina }}" style="all:unset;cursor:pointer;background:oklch(0.47 0.09 200);color:white;font-size:13px;font-weight:600;padding:8px 18px;border-radius:8px;">{{ payrollButtonLabel }}</button>
+            </div>
+          </div>
+          <div style="background:white;border:1px solid oklch(0.9 0.006 85);border-radius:14px;box-shadow:0 1px 3px oklch(0.2 0.01 85 / 0.05);padding:18px 22px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-size:13.5px;">Estado del ciclo de nómina</div>
+            <span style="font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px;background:{{ payrollStatusBg }};color:{{ payrollStatusColor }};">{{ payrollStatusLabel }}</span>
+          </div>
+          <div style="background:white;border:1px solid oklch(0.9 0.006 85);border-radius:14px;box-shadow:0 1px 3px oklch(0.2 0.01 85 / 0.05);overflow:hidden;margin-bottom:24px;">
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;padding:11px 20px;font-size:11px;font-weight:600;color:oklch(0.5 0.01 85);border-bottom:1px solid oklch(0.94 0.004 85);">
+              <div>Concepto</div><div>Tipo</div><div style="text-align:right;">Monto total</div><div style="text-align:right;">Acciones</div>
+            </div>
+            <sc-for list="{{ payrollConcepts }}" as="c" hint-placeholder-count="6">
+              <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;padding:12px 20px;font-size:13.5px;border-bottom:1px solid oklch(0.96 0.004 85);align-items:center;">
+                <div style="font-weight:500;">{{ c.concepto }}</div>
+                <div style="color:oklch(0.5 0.01 85);">{{ c.tipo }}</div>
+                <div class="mono" style="text-align:right;">{{ c.monto }}</div>
+                <div style="display:flex;gap:12px;justify-content:flex-end;">
+                  <button onClick="{{ c.onEdit }}" style="all:unset;cursor:pointer;font-size:12.5px;font-weight:600;color:oklch(0.47 0.09 200);">Editar</button>
+                  <button onClick="{{ c.onDelete }}" style="all:unset;cursor:pointer;font-size:12.5px;font-weight:600;color:oklch(0.55 0.14 25);">Eliminar</button>
+                </div>
+              </div>
+            </sc-for>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;padding:14px 20px;font-size:14px;font-weight:700;background:oklch(0.98 0.005 85);">
+              <div>Total nómina</div><div></div><div class="mono" style="text-align:right;">{{ payrollTotal }}</div><div></div>
+            </div>
+          </div>
+
+          <div style="background:white;border:1px solid oklch(0.9 0.006 85);border-radius:14px;box-shadow:0 1px 3px oklch(0.2 0.01 85 / 0.05);padding:22px 24px;">
+            <h2 style="font-size:15px;font-weight:700;margin:0 0 4px;">Recibo de pago por empleado</h2>
+            <p style="font-size:12.5px;color:oklch(0.5 0.01 85);margin:0 0 16px;">Filtra por colaborador para ver y descargar su recibo del ciclo actual.</p>
+            <select value="{{ reciboEmployeeIdx }}" onChange="{{ onReciboChange }}" style="width:100%;max-width:340px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;margin-bottom:18px;" style-focus="border-color:oklch(0.47 0.09 200);outline:none;box-shadow:0 0 0 3px oklch(0.47 0.09 200 / 0.15);">
+              <option value="">Selecciona un colaborador…</option>
+              <sc-for list="{{ employeeOptions }}" as="eo" hint-placeholder-count="8">
+                <option value="{{ eo.idx }}">{{ eo.nombre }}</option>
+              </sc-for>
+            </select>
+
+            <sc-if value="{{ hasRecibo }}" hint-placeholder-val="{{ false }}">
+              <div style="border:1px solid oklch(0.9 0.006 85);border-radius:12px;padding:20px 22px;max-width:420px;">
+                <div style="font-size:14px;font-weight:700;">{{ recibo.nombre }}</div>
+                <div style="font-size:12.5px;color:oklch(0.5 0.01 85);margin-bottom:16px;">{{ recibo.cargo }} · {{ recibo.planta }}</div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-top:1px solid oklch(0.94 0.004 85);"><span style="color:oklch(0.5 0.01 85);">Salario básico</span><span class="mono">{{ recibo.base }}</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-top:1px solid oklch(0.94 0.004 85);"><span style="color:oklch(0.5 0.01 85);">Auxilio de transporte</span><span class="mono">{{ recibo.aux }}</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-top:1px solid oklch(0.94 0.004 85);"><span style="color:oklch(0.5 0.01 85);">Salud (empleado)</span><span class="mono">{{ recibo.salud }}</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-top:1px solid oklch(0.94 0.004 85);"><span style="color:oklch(0.5 0.01 85);">Pensión (empleado)</span><span class="mono">{{ recibo.pension }}</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:14.5px;font-weight:700;padding:10px 0 0;border-top:1px solid oklch(0.9 0.006 85);margin-top:6px;"><span>Neto a pagar</span><span class="mono">{{ recibo.neto }}</span></div>
+                <button onClick="{{ printRecibo }}" style="all:unset;cursor:pointer;display:block;text-align:center;margin-top:18px;width:100%;background:oklch(0.47 0.09 200);color:white;font-size:13px;font-weight:600;padding:10px;border-radius:8px;">Imprimir recibo</button>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isReclutamiento }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <h1 style="font-size:22px;font-weight:700;margin:0;">Reclutamiento y Onboarding</h1>
+            <button onClick="{{ openFormReclutamiento }}" style="all:unset;cursor:pointer;background:oklch(0.47 0.09 200);color:white;font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px;">+ Nuevo candidato</button>
+          </div>
+          <p style="font-size:13.5px;color:oklch(0.5 0.01 85);margin:0 0 20px;">Vacante activa: Operario(a) de Costura Industrial — Planta Confección Bogotá</p>
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;">
+            <sc-for list="{{ candidateStages }}" as="stage" hint-placeholder-count="5">
+              <div>
+                <div style="font-size:11.5px;font-weight:700;color:oklch(0.5 0.01 85);margin-bottom:10px;">{{ stage.label }} · {{ stage.candidates.length }}</div>
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                  <sc-for list="{{ stage.candidates }}" as="cand" hint-placeholder-count="2">
+                    <div style="position:relative;background:white;border:1px solid oklch(0.9 0.006 85);border-radius:10px;padding:12px;box-shadow:0 1px 3px oklch(0.2 0.01 85 / 0.05);">
+                      <button onClick="{{ cand.onDelete }}" style="all:unset;cursor:pointer;position:absolute;top:8px;right:10px;font-size:14px;color:oklch(0.6 0.01 85);line-height:1;">×</button>
+                      <div style="font-size:13px;font-weight:600;padding-right:14px;">{{ cand.nombre }}</div>
+                      <div style="font-size:11.5px;color:oklch(0.5 0.01 85);margin-top:3px;">{{ cand.fecha }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isMarcacion }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+            <h1 style="font-size:22px;font-weight:700;margin:0;">Marcación y Asistencia — Hoy</h1>
+            <button onClick="{{ openFormMarcacion }}" style="all:unset;cursor:pointer;background:oklch(0.47 0.09 200);color:white;font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px;">+ Registrar marcación</button>
+          </div>
+          <div style="background:white;border:1px solid oklch(0.9 0.006 85);border-radius:14px;box-shadow:0 1px 3px oklch(0.2 0.01 85 / 0.05);overflow:hidden;">
+            <div style="display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr 1fr 1fr;padding:11px 20px;font-size:11px;font-weight:600;color:oklch(0.5 0.01 85);border-bottom:1px solid oklch(0.94 0.004 85);">
+              <div>Colaborador</div><div>Turno</div><div>Entrada</div><div>Salida</div><div>Estado</div><div>Acciones</div>
+            </div>
+            <sc-for list="{{ attendance }}" as="a" hint-placeholder-count="6">
+              <div style="display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr 1fr 1fr;padding:13px 20px;font-size:13.5px;border-bottom:1px solid oklch(0.96 0.004 85);align-items:center;">
+                <div style="font-weight:500;">{{ a.nombre }}</div>
+                <div style="color:oklch(0.5 0.01 85);">{{ a.turno }}</div>
+                <div class="mono">{{ a.entrada }}</div>
+                <div class="mono">{{ a.salida }}</div>
+                <div><span style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;background:{{ a.estadoBg }};color:{{ a.estadoColor }};">{{ a.estado }}</span></div>
+                <div style="display:flex;gap:12px;">
+                  <button onClick="{{ a.onEdit }}" style="all:unset;cursor:pointer;font-size:12.5px;font-weight:600;color:oklch(0.47 0.09 200);">Editar</button>
+                  <button onClick="{{ a.onDelete }}" style="all:unset;cursor:pointer;font-size:12.5px;font-weight:600;color:oklch(0.55 0.14 25);">Eliminar</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isDesempeno }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+            <h1 style="font-size:22px;font-weight:700;margin:0;">Desempeño · Ciclo 2026-S1</h1>
+            <button onClick="{{ openFormDesempeno }}" style="all:unset;cursor:pointer;background:oklch(0.47 0.09 200);color:white;font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px;">+ Nueva evaluación</button>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;">
+            <sc-for list="{{ evaluations }}" as="ev" hint-placeholder-count="4">
+              <div style="background:white;border:1px solid oklch(0.9 0.006 85);border-radius:14px;box-shadow:0 1px 3px oklch(0.2 0.01 85 / 0.05);padding:18px 20px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+                  <div>
+                    <div style="font-size:14px;font-weight:600;">{{ ev.nombre }}</div>
+                    <div style="font-size:12px;color:oklch(0.5 0.01 85);">{{ ev.cargo }}</div>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:14px;">
+                    <div class="mono" style="font-size:20px;font-weight:700;color:oklch(0.47 0.09 200);">{{ ev.puntaje }}</div>
+                    <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;">
+                      <button onClick="{{ ev.onEdit }}" style="all:unset;cursor:pointer;font-size:11.5px;font-weight:600;color:oklch(0.47 0.09 200);">Editar</button>
+                      <button onClick="{{ ev.onDelete }}" style="all:unset;cursor:pointer;font-size:11.5px;font-weight:600;color:oklch(0.55 0.14 25);">Eliminar</button>
+                    </div>
+                  </div>
+                </div>
+                <sc-for list="{{ ev.competencias }}" as="comp" hint-placeholder-count="3">
+                  <div style="margin-bottom:8px;">
+                    <div style="display:flex;justify-content:space-between;font-size:12px;color:oklch(0.45 0.01 85);margin-bottom:3px;"><span>{{ comp.nombre }}</span><span class="mono">{{ comp.valor }}%</span></div>
+                    <div style="height:6px;background:oklch(0.94 0.004 85);border-radius:4px;overflow:hidden;">
+                      <div style="height:100%;width:{{ comp.valor }}%;background:oklch(0.47 0.09 200);"></div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+
+  <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeDrawer }}" style="position:fixed;inset:0;background:oklch(0.2 0.01 85 / 0.35);display:flex;justify-content:flex-end;z-index:20;">
+      <div onClick="{{ stopProp }}" style="width:400px;height:100%;background:white;box-shadow:-8px 0 24px oklch(0.2 0.01 85 / 0.12);padding:28px 26px;overflow-y:auto;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;">
+          <div>
+            <div style="width:52px;height:52px;border-radius:50%;background:oklch(0.9 0.02 200);color:oklch(0.35 0.06 200);font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:12px;">{{ selectedEmployee.iniciales }}</div>
+            <div style="font-size:18px;font-weight:700;">{{ selectedEmployee.nombre }}</div>
+            <div style="font-size:13px;color:oklch(0.5 0.01 85);">{{ selectedEmployee.cargo }}</div>
+          </div>
+          <button onClick="{{ closeDrawer }}" style="all:unset;cursor:pointer;font-size:20px;color:oklch(0.5 0.01 85);line-height:1;">×</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div style="border-top:1px solid oklch(0.94 0.004 85);padding-top:12px;display:flex;justify-content:space-between;font-size:13.5px;"><span style="color:oklch(0.5 0.01 85);">Planta</span><span style="font-weight:500;">{{ selectedEmployee.planta }}</span></div>
+          <div style="border-top:1px solid oklch(0.94 0.004 85);padding-top:12px;display:flex;justify-content:space-between;font-size:13.5px;"><span style="color:oklch(0.5 0.01 85);">Turno</span><span style="font-weight:500;">{{ selectedEmployee.turno }}</span></div>
+          <div style="border-top:1px solid oklch(0.94 0.004 85);padding-top:12px;display:flex;justify-content:space-between;font-size:13.5px;"><span style="color:oklch(0.5 0.01 85);">Antigüedad</span><span class="mono" style="font-weight:500;">{{ selectedEmployee.antiguedad }}</span></div>
+          <div style="border-top:1px solid oklch(0.94 0.004 85);padding-top:12px;display:flex;justify-content:space-between;font-size:13.5px;"><span style="color:oklch(0.5 0.01 85);">Salario base</span><span class="mono" style="font-weight:500;">{{ selectedEmployee.salario }}</span></div>
+          <div style="border-top:1px solid oklch(0.94 0.004 85);padding-top:12px;display:flex;justify-content:space-between;font-size:13.5px;"><span style="color:oklch(0.5 0.01 85);">Correo</span><span style="font-weight:500;">{{ selectedEmployee.email }}</span></div>
+          <div style="border-top:1px solid oklch(0.94 0.004 85);padding-top:12px;display:flex;justify-content:space-between;align-items:center;font-size:13.5px;"><span style="color:oklch(0.5 0.01 85);">Estado</span><span style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;background:{{ selectedEmployee.estadoBg }};color:{{ selectedEmployee.estadoColor }};">{{ selectedEmployee.estado }}</span></div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ formOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeForm }}" style="position:fixed;inset:0;background:oklch(0.2 0.01 85 / 0.35);display:flex;justify-content:flex-end;z-index:25;">
+      <div onClick="{{ stopProp }}" style="width:440px;height:100%;background:white;box-shadow:-8px 0 24px oklch(0.2 0.01 85 / 0.12);padding:28px 26px;overflow-y:auto;display:flex;flex-direction:column;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <div style="font-size:17px;font-weight:700;">{{ formTitle }}</div>
+          <button onClick="{{ closeForm }}" style="all:unset;cursor:pointer;font-size:20px;color:oklch(0.5 0.01 85);line-height:1;">×</button>
+        </div>
+        <div style="font-size:12.5px;color:oklch(0.5 0.01 85);margin-bottom:14px;">{{ formSubtitle }}</div>
+
+        <sc-if value="{{ isFormEmpleados }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;flex:1;">
+            <div style="font-size:10.5px;letter-spacing:0.08em;font-weight:700;color:oklch(0.55 0.01 85);margin:10px 0 10px;">DATOS PERSONALES</div>
+            <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);margin-bottom:12px;display:block;">Nombre completo
+              <input value="{{ formData.empNombre }}" onChange="{{ onEmpNombre }}" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;" style-focus="border-color:oklch(0.47 0.09 200);outline:none;box-shadow:0 0 0 3px oklch(0.47 0.09 200 / 0.15);"/>
+            </label>
+            <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);margin-bottom:12px;display:block;">Correo electrónico
+              <input value="{{ formData.empEmail }}" onChange="{{ onEmpEmail }}" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;" style-focus="border-color:oklch(0.47 0.09 200);outline:none;box-shadow:0 0 0 3px oklch(0.47 0.09 200 / 0.15);"/>
+            </label>
+
+            <div style="font-size:10.5px;letter-spacing:0.08em;font-weight:700;color:oklch(0.55 0.01 85);margin:8px 0 10px;padding-top:14px;border-top:1px solid oklch(0.94 0.004 85);">DATOS LABORALES</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+              <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);">Cargo
+                <input value="{{ formData.empCargo }}" onChange="{{ onEmpCargo }}" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;" style-focus="border-color:oklch(0.47 0.09 200);outline:none;box-shadow:0 0 0 3px oklch(0.47 0.09 200 / 0.15);"/>
+              </label>
+              <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);">Planta
+                <select value="{{ formData.empPlanta }}" onChange="{{ onEmpPlanta }}" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;">
+                  <option>Confección Bogotá</option><option>Corte Medellín</option><option>Administrativa Bogotá</option><option>Administrativa Medellín</option>
+                </select>
+              </label>
+              <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);">Turno
+                <select value="{{ formData.empTurno }}" onChange="{{ onEmpTurno }}" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;">
+                  <option>Mañana</option><option>Tarde</option><option>Noche</option><option>Oficina</option>
+                </select>
+              </label>
+              <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);">Estado
+                <select value="{{ formData.empEstado }}" onChange="{{ onEmpEstado }}" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;">
+                  <option>Activo</option><option>Vacaciones</option><option>Incapacidad</option>
+                </select>
+              </label>
+            </div>
+
+            <div style="font-size:10.5px;letter-spacing:0.08em;font-weight:700;color:oklch(0.55 0.01 85);margin:8px 0 10px;padding-top:14px;border-top:1px solid oklch(0.94 0.004 85);">COMPENSACIÓN</div>
+            <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);">Salario base
+              <input value="{{ formData.empSalario }}" onChange="{{ onEmpSalario }}" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;" style-focus="border-color:oklch(0.47 0.09 200);outline:none;box-shadow:0 0 0 3px oklch(0.47 0.09 200 / 0.15);"/>
+            </label>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isFormNomina }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;flex:1;">
+            <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);margin-bottom:12px;display:block;">Concepto
+              <input value="{{ formData.nomConcepto }}" onChange="{{ onNomConcepto }}" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;" style-focus="border-color:oklch(0.47 0.09 200);outline:none;box-shadow:0 0 0 3px oklch(0.47 0.09 200 / 0.15);"/>
+            </label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);">Tipo
+                <select value="{{ formData.nomTipo }}" onChange="{{ onNomTipo }}" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;">
+                  <option>Devengado</option><option>Deducción</option>
+                </select>
+              </label>
+              <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);">Monto total
+                <input value="{{ formData.nomMonto }}" onChange="{{ onNomMonto }}" placeholder="$500.000" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;" style-focus="border-color:oklch(0.47 0.09 200);outline:none;box-shadow:0 0 0 3px oklch(0.47 0.09 200 / 0.15);"/>
+              </label>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isFormReclutamiento }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;flex:1;">
+            <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);margin-bottom:12px;display:block;">Nombre del candidato
+              <input value="{{ formData.recNombre }}" onChange="{{ onRecNombre }}" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;" style-focus="border-color:oklch(0.47 0.09 200);outline:none;box-shadow:0 0 0 3px oklch(0.47 0.09 200 / 0.15);"/>
+            </label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);">Etapa del proceso
+                <select value="{{ formData.recEtapa }}" onChange="{{ onRecEtapa }}" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;">
+                  <option>Postulados</option><option>Entrevista</option><option>Prueba técnica</option><option>Oferta</option><option>Contratado</option>
+                </select>
+              </label>
+              <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);">Fecha
+                <input value="{{ formData.recFecha }}" onChange="{{ onRecFecha }}" placeholder="29 jul" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;" style-focus="border-color:oklch(0.47 0.09 200);outline:none;box-shadow:0 0 0 3px oklch(0.47 0.09 200 / 0.15);"/>
+              </label>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isFormMarcacion }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;flex:1;">
+            <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);margin-bottom:12px;display:block;">Colaborador
+              <input value="{{ formData.marNombre }}" onChange="{{ onMarNombre }}" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;" style-focus="border-color:oklch(0.47 0.09 200);outline:none;box-shadow:0 0 0 3px oklch(0.47 0.09 200 / 0.15);"/>
+            </label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+              <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);">Turno
+                <select value="{{ formData.marTurno }}" onChange="{{ onMarTurno }}" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;">
+                  <option>Mañana</option><option>Tarde</option><option>Noche</option>
+                </select>
+              </label>
+              <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);">Estado
+                <select value="{{ formData.marEstado }}" onChange="{{ onMarEstado }}" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;">
+                  <option>A tiempo</option><option>Tarde</option><option>Ausente</option><option>En turno</option><option>Incapacidad</option>
+                </select>
+              </label>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);">Hora de entrada
+                <input value="{{ formData.marEntrada }}" onChange="{{ onMarEntrada }}" placeholder="06:00" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;" style-focus="border-color:oklch(0.47 0.09 200);outline:none;box-shadow:0 0 0 3px oklch(0.47 0.09 200 / 0.15);"/>
+              </label>
+              <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);">Hora de salida
+                <input value="{{ formData.marSalida }}" onChange="{{ onMarSalida }}" placeholder="14:00" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;" style-focus="border-color:oklch(0.47 0.09 200);outline:none;box-shadow:0 0 0 3px oklch(0.47 0.09 200 / 0.15);"/>
+              </label>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isFormDesempeno }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;flex:1;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+              <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);">Colaborador
+                <input value="{{ formData.desNombre }}" onChange="{{ onDesNombre }}" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;" style-focus="border-color:oklch(0.47 0.09 200);outline:none;box-shadow:0 0 0 3px oklch(0.47 0.09 200 / 0.15);"/>
+              </label>
+              <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);">Cargo
+                <input value="{{ formData.desCargo }}" onChange="{{ onDesCargo }}" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;" style-focus="border-color:oklch(0.47 0.09 200);outline:none;box-shadow:0 0 0 3px oklch(0.47 0.09 200 / 0.15);"/>
+              </label>
+            </div>
+            <label style="font-size:12px;font-weight:600;color:oklch(0.4 0.01 85);margin-bottom:12px;display:block;">Puntaje global (1-5)
+              <input value="{{ formData.desPuntaje }}" onChange="{{ onDesPuntaje }}" placeholder="4.5" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;" style-focus="border-color:oklch(0.47 0.09 200);outline:none;box-shadow:0 0 0 3px oklch(0.47 0.09 200 / 0.15);"/>
+            </label>
+            <div style="font-size:10.5px;letter-spacing:0.08em;font-weight:700;color:oklch(0.55 0.01 85);margin:8px 0 10px;padding-top:14px;border-top:1px solid oklch(0.94 0.004 85);">COMPETENCIAS (%)</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+              <label style="font-size:11.5px;font-weight:600;color:oklch(0.4 0.01 85);">Calidad
+                <input value="{{ formData.desComp1 }}" onChange="{{ onDesComp1 }}" placeholder="90" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;" style-focus="border-color:oklch(0.47 0.09 200);outline:none;box-shadow:0 0 0 3px oklch(0.47 0.09 200 / 0.15);"/>
+              </label>
+              <label style="font-size:11.5px;font-weight:600;color:oklch(0.4 0.01 85);">Puntualidad
+                <input value="{{ formData.desComp2 }}" onChange="{{ onDesComp2 }}" placeholder="85" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;" style-focus="border-color:oklch(0.47 0.09 200);outline:none;box-shadow:0 0 0 3px oklch(0.47 0.09 200 / 0.15);"/>
+              </label>
+              <label style="font-size:11.5px;font-weight:600;color:oklch(0.4 0.01 85);">Equipo
+                <input value="{{ formData.desComp3 }}" onChange="{{ onDesComp3 }}" placeholder="90" style="width:100%;margin-top:5px;padding:10px 12px;border:1px solid oklch(0.85 0.01 85);border-radius:8px;font-size:13.5px;" style-focus="border-color:oklch(0.47 0.09 200);outline:none;box-shadow:0 0 0 3px oklch(0.47 0.09 200 / 0.15);"/>
+              </label>
+            </div>
+          </div>
+        </sc-if>
+
+        <div style="display:flex;gap:10px;margin-top:24px;">
+          <button onClick="{{ closeForm }}" style="all:unset;cursor:pointer;flex:1;text-align:center;background:oklch(0.96 0.005 85);color:oklch(0.35 0.01 85);font-size:13.5px;font-weight:600;padding:11px;border-radius:8px;">Cancelar</button>
+          <button onClick="{{ submitForm }}" style="all:unset;cursor:pointer;flex:1;text-align:center;background:oklch(0.47 0.09 200);color:white;font-size:13.5px;font-weight:600;padding:11px;border-radius:8px;">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const NAV = [
+  { id: 'dashboard', label: 'Dashboard Ejecutivo', glyph: 'D', color: 'oklch(0.47 0.09 200)' },
+  { id: 'empleados', label: 'Empleados', glyph: 'E', color: 'oklch(0.5 0.1 220)' },
+  { id: 'nomina', label: 'Nómina', glyph: '$', color: 'oklch(0.55 0.12 40)' },
+  { id: 'reclutamiento', label: 'Reclutamiento', glyph: 'R', color: 'oklch(0.5 0.1 260)' },
+  { id: 'marcacion', label: 'Marcación y Asistencia', glyph: 'M', color: 'oklch(0.5 0.1 300)' },
+  { id: 'desempeno', label: 'Desempeño', glyph: 'P', color: 'oklch(0.5 0.1 160)' },
+];
+
+const LABELS = { dashboard: 'Dashboard Ejecutivo', empleados: 'Empleados', nomina: 'Nómina', reclutamiento: 'Reclutamiento', marcacion: 'Marcación y Asistencia', desempeno: 'Desempeño' };
+const FORM_TITLES_NEW = { empleados: 'Nuevo empleado', nomina: 'Nuevo concepto salarial', reclutamiento: 'Nuevo candidato', marcacion: 'Registrar marcación', desempeno: 'Nueva evaluación' };
+const FORM_TITLES_EDIT = { empleados: 'Editar empleado', nomina: 'Editar concepto salarial', marcacion: 'Editar marcación', desempeno: 'Editar evaluación' };
+const FORM_SUBTITLES = {
+  empleados: 'Registra o actualiza la información del expediente digital.',
+  nomina: 'Agrega un concepto devengado o de deducción al ciclo actual.',
+  reclutamiento: 'Añade un candidato a la etapa correspondiente del proceso.',
+  marcacion: 'Registra o corrige la marcación de un colaborador.',
+  desempeno: 'Registra la evaluación de desempeño de un colaborador.',
+};
+
+const EMP_BADGE = {
+  Activo: { bg: 'oklch(0.93 0.06 150)', color: 'oklch(0.4 0.1 150)' },
+  Vacaciones: { bg: 'oklch(0.94 0.06 80)', color: 'oklch(0.5 0.1 80)' },
+  Incapacidad: { bg: 'oklch(0.93 0.06 25)', color: 'oklch(0.5 0.12 25)' },
+};
+const ATT_BADGE = {
+  'A tiempo': { bg: 'oklch(0.93 0.06 150)', color: 'oklch(0.4 0.1 150)' },
+  'Tarde': { bg: 'oklch(0.94 0.06 80)', color: 'oklch(0.5 0.1 80)' },
+  'Ausente': { bg: 'oklch(0.93 0.06 25)', color: 'oklch(0.5 0.12 25)' },
+  'En turno': { bg: 'oklch(0.94 0.03 200)', color: 'oklch(0.4 0.08 200)' },
+  'Incapacidad': { bg: 'oklch(0.93 0.06 25)', color: 'oklch(0.5 0.12 25)' },
+};
+const ESTADO_COLORS = { Activo: 'oklch(0.6 0.12 150)', Vacaciones: 'oklch(0.75 0.13 80)', Incapacidad: 'oklch(0.6 0.14 25)' };
+
+const FORM_DEFAULTS = {
+  empleados: { empNombre: '', empCargo: '', empPlanta: 'Confección Bogotá', empTurno: 'Mañana', empSalario: '$1.423.500', empEmail: '', empEstado: 'Activo' },
+  nomina: { nomConcepto: '', nomTipo: 'Devengado', nomMonto: '' },
+  reclutamiento: { recNombre: '', recEtapa: 'Postulados', recFecha: '' },
+  marcacion: { marNombre: '', marTurno: 'Mañana', marEntrada: '', marSalida: '', marEstado: 'A tiempo' },
+  desempeno: { desNombre: '', desCargo: '', desPuntaje: '4.0', desComp1: '85', desComp2: '85', desComp3: '85' },
+};
+
+function parseMonto(s) { return parseInt(String(s).replace(/[^0-9-]/g, ''), 10) || 0; }
+function formatMonto(n) { const sign = n < 0 ? '-' : ''; return sign + '$' + Math.abs(Math.round(n)).toLocaleString('es-CO'); }
+function countBy(arr, keyFn) { const map = {}; arr.forEach(x => { const k = keyFn(x); map[k] = (map[k] || 0) + 1; }); return map; }
+function buildDonut(counts, colorMap) {
+  const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
+  let acc = 0; const stops = []; const legend = [];
+  Object.entries(counts).forEach(([label, count]) => {
+    const pct = (count / total) * 100; const start = acc; const end = acc + pct;
+    const color = colorMap[label] || 'oklch(0.8 0.01 85)';
+    stops.push(`${color} ${start}% ${end}%`);
+    legend.push({ label, count, color });
+    acc = end;
+  });
+  return { style: `conic-gradient(${stops.join(', ')})`, legend };
+}
+
+class Component extends DCLogic {
+  state = {
+    activeModule: 'dashboard', selectedEmployee: null, drawerOpen: false, payrollStatus: 'pendiente',
+    formModule: null, formData: {}, editIndex: null, reciboEmployeeIdx: null,
+    employees: [
+      { nombre: 'Luz Marina Peña', cargo: 'Operario de Costura', planta: 'Confección Bogotá', turno: 'Mañana', antiguedad: '3 años', salario: '$1.423.500', email: 'luz.pena@industriastextil.co', estado: 'Activo' },
+      { nombre: 'Carlos Andrés Ruiz', cargo: 'Supervisor de Producción', planta: 'Corte Medellín', turno: 'Mañana', antiguedad: '6 años', salario: '$2.850.000', email: 'carlos.ruiz@industriastextil.co', estado: 'Activo' },
+      { nombre: 'María Fernanda Ortiz', cargo: 'Auxiliar Contable', planta: 'Administrativa Bogotá', turno: 'Oficina', antiguedad: '2 años', salario: '$2.100.000', email: 'maria.ortiz@industriastextil.co', estado: 'Activo' },
+      { nombre: 'Jorge Iván Salcedo', cargo: 'Operario de Tejeduría', planta: 'Corte Medellín', turno: 'Noche', antiguedad: '1 año', salario: '$1.423.500', email: 'jorge.salcedo@industriastextil.co', estado: 'Vacaciones' },
+      { nombre: 'Diana Patricia Gómez', cargo: 'Analista de Calidad', planta: 'Confección Bogotá', turno: 'Tarde', antiguedad: '4 años', salario: '$2.300.000', email: 'diana.gomez@industriastextil.co', estado: 'Activo' },
+      { nombre: 'Andrés Felipe Torres', cargo: 'Operario de Corte', planta: 'Corte Medellín', turno: 'Mañana', antiguedad: '8 meses', salario: '$1.423.500', email: 'andres.torres@industriastextil.co', estado: 'Activo' },
+      { nombre: 'Sandra Milena Herrera', cargo: 'Coordinadora de Talento Humano', planta: 'Administrativa Bogotá', turno: 'Oficina', antiguedad: '5 años', salario: '$3.600.000', email: 'sandra.herrera@industriastextil.co', estado: 'Activo' },
+      { nombre: 'Pedro Antonio Vargas', cargo: 'Operario de Costura', planta: 'Confección Bogotá', turno: 'Tarde', antiguedad: '11 meses', salario: '$1.423.500', email: 'pedro.vargas@industriastextil.co', estado: 'Incapacidad' },
+    ],
+    payrollConcepts: [
+      { concepto: 'Salario básico', tipo: 'Devengado', monto: '$18.240.000' },
+      { concepto: 'Horas extras', tipo: 'Devengado', monto: '$1.120.000' },
+      { concepto: 'Auxilio de transporte', tipo: 'Devengado', monto: '$980.000' },
+      { concepto: 'Salud (aporte empleado)', tipo: 'Deducción', monto: '-$730.000' },
+      { concepto: 'Pensión (aporte empleado)', tipo: 'Deducción', monto: '-$730.000' },
+      { concepto: 'Retención en la fuente', tipo: 'Deducción', monto: '-$210.000' },
+    ],
+    candidateStages: [
+      { label: 'Postulados', candidates: [{ nombre: 'Yuliana Cárdenas', fecha: '12 jul' }, { nombre: 'Esteban Rico', fecha: '14 jul' }] },
+      { label: 'Entrevista', candidates: [{ nombre: 'Camilo Pardo', fecha: '18 jul' }] },
+      { label: 'Prueba técnica', candidates: [{ nombre: 'Natalia Cifuentes', fecha: '21 jul' }] },
+      { label: 'Oferta', candidates: [] },
+      { label: 'Contratado', candidates: [{ nombre: 'Wilson Bautista', fecha: '5 jul' }] },
+    ],
+    attendance: [
+      { nombre: 'Luz Marina Peña', turno: 'Mañana', entrada: '06:01', salida: '14:02', estado: 'A tiempo' },
+      { nombre: 'Andrés Felipe Torres', turno: 'Mañana', entrada: '06:14', salida: '14:05', estado: 'Tarde' },
+      { nombre: 'Diana Patricia Gómez', turno: 'Tarde', entrada: '14:00', salida: '—', estado: 'En turno' },
+      { nombre: 'Jorge Iván Salcedo', turno: 'Noche', entrada: '—', salida: '—', estado: 'Ausente' },
+      { nombre: 'Pedro Antonio Vargas', turno: 'Tarde', entrada: '—', salida: '—', estado: 'Incapacidad' },
+      { nombre: 'Carlos Andrés Ruiz', turno: 'Mañana', entrada: '05:58', salida: '14:00', estado: 'A tiempo' },
+    ],
+    evaluations: [
+      { nombre: 'Luz Marina Peña', cargo: 'Operario de Costura', puntaje: '4.6', competencias: [{ nombre: 'Calidad de trabajo', valor: 92 }, { nombre: 'Puntualidad', valor: 88 }, { nombre: 'Trabajo en equipo', valor: 95 }] },
+      { nombre: 'Carlos Andrés Ruiz', cargo: 'Supervisor de Producción', puntaje: '4.8', competencias: [{ nombre: 'Liderazgo', valor: 96 }, { nombre: 'Gestión de conflictos', valor: 90 }, { nombre: 'Cumplimiento de metas', valor: 94 }] },
+      { nombre: 'Diana Patricia Gómez', cargo: 'Analista de Calidad', puntaje: '4.3', competencias: [{ nombre: 'Precisión técnica', valor: 91 }, { nombre: 'Comunicación', valor: 80 }, { nombre: 'Iniciativa', valor: 85 }] },
+      { nombre: 'Sandra Milena Herrera', cargo: 'Coord. Talento Humano', puntaje: '4.7', competencias: [{ nombre: 'Gestión de personas', valor: 93 }, { nombre: 'Planeación', valor: 89 }, { nombre: 'Confidencialidad', valor: 97 }] },
+    ],
+  };
+
+  selectModule = (id) => this.setState({ activeModule: id });
+  openEmployee = (e) => this.setState({ selectedEmployee: e, drawerOpen: true });
+  closeDrawer = () => this.setState({ drawerOpen: false });
+  stopProp = (e) => e.stopPropagation();
+  procesarNomina = () => this.setState(s => ({ payrollStatus: s.payrollStatus === 'pendiente' ? 'procesado' : 'pendiente' }));
+  printRecibo = () => window.print();
+  onReciboChange = (e) => this.setState({ reciboEmployeeIdx: e.target.value === '' ? null : Number(e.target.value) });
+
+  openForm = (mod) => this.setState({ formModule: mod, formData: { ...FORM_DEFAULTS[mod] }, editIndex: null });
+  closeForm = () => this.setState({ formModule: null, editIndex: null });
+  openFormEmpleados = () => this.openForm('empleados');
+  openFormNomina = () => this.openForm('nomina');
+  openFormReclutamiento = () => this.openForm('reclutamiento');
+  openFormMarcacion = () => this.openForm('marcacion');
+  openFormDesempeno = () => this.openForm('desempeno');
+  setField = (key, val) => this.setState(s => ({ formData: { ...s.formData, [key]: val } }));
+
+  editEmployee = (idx) => { const e = this.state.employees[idx]; this.setState({ formModule: 'empleados', editIndex: idx, formData: { empNombre: e.nombre, empCargo: e.cargo, empPlanta: e.planta, empTurno: e.turno, empSalario: e.salario, empEmail: e.email, empEstado: e.estado } }); };
+  deleteEmployee = (idx) => this.setState(s => ({ employees: s.employees.filter((_, i) => i !== idx) }));
+  editPayroll = (idx) => { const c = this.state.payrollConcepts[idx]; this.setState({ formModule: 'nomina', editIndex: idx, formData: { nomConcepto: c.concepto, nomTipo: c.tipo, nomMonto: c.monto } }); };
+  deletePayroll = (idx) => this.setState(s => ({ payrollConcepts: s.payrollConcepts.filter((_, i) => i !== idx) }));
+  editAttendance = (idx) => { const a = this.state.attendance[idx]; this.setState({ formModule: 'marcacion', editIndex: idx, formData: { marNombre: a.nombre, marTurno: a.turno, marEntrada: a.entrada, marSalida: a.salida, marEstado: a.estado } }); };
+  deleteAttendance = (idx) => this.setState(s => ({ attendance: s.attendance.filter((_, i) => i !== idx) }));
+  editEvaluation = (idx) => { const ev = this.state.evaluations[idx]; this.setState({ formModule: 'desempeno', editIndex: idx, formData: { desNombre: ev.nombre, desCargo: ev.cargo, desPuntaje: ev.puntaje, desComp1: String(ev.competencias[0] ? ev.competencias[0].valor : 80), desComp2: String(ev.competencias[1] ? ev.competencias[1].valor : 80), desComp3: String(ev.competencias[2] ? ev.competencias[2].valor : 80) } }); };
+  deleteEvaluation = (idx) => this.setState(s => ({ evaluations: s.evaluations.filter((_, i) => i !== idx) }));
+  deleteCandidate = (stageIdx, candIdx) => this.setState(s => ({ candidateStages: s.candidateStages.map((st, si) => si === stageIdx ? { ...st, candidates: st.candidates.filter((_, ci) => ci !== candIdx) } : st) }));
+
+  onEmpNombre = (e) => this.setField('empNombre', e.target.value);
+  onEmpCargo = (e) => this.setField('empCargo', e.target.value);
+  onEmpPlanta = (e) => this.setField('empPlanta', e.target.value);
+  onEmpTurno = (e) => this.setField('empTurno', e.target.value);
+  onEmpSalario = (e) => this.setField('empSalario', e.target.value);
+  onEmpEmail = (e) => this.setField('empEmail', e.target.value);
+  onEmpEstado = (e) => this.setField('empEstado', e.target.value);
+  onNomConcepto = (e) => this.setField('nomConcepto', e.target.value);
+  onNomTipo = (e) => this.setField('nomTipo', e.target.value);
+  onNomMonto = (e) => this.setField('nomMonto', e.target.value);
+  onRecNombre = (e) => this.setField('recNombre', e.target.value);
+  onRecEtapa = (e) => this.setField('recEtapa', e.target.value);
+  onRecFecha = (e) => this.setField('recFecha', e.target.value);
+  onMarNombre = (e) => this.setField('marNombre', e.target.value);
+  onMarTurno = (e) => this.setField('marTurno', e.target.value);
+  onMarEntrada = (e) => this.setField('marEntrada', e.target.value);
+  onMarSalida = (e) => this.setField('marSalida', e.target.value);
+  onMarEstado = (e) => this.setField('marEstado', e.target.value);
+  onDesNombre = (e) => this.setField('desNombre', e.target.value);
+  onDesCargo = (e) => this.setField('desCargo', e.target.value);
+  onDesPuntaje = (e) => this.setField('desPuntaje', e.target.value);
+  onDesComp1 = (e) => this.setField('desComp1', e.target.value);
+  onDesComp2 = (e) => this.setField('desComp2', e.target.value);
+  onDesComp3 = (e) => this.setField('desComp3', e.target.value);
+
+  submitForm = () => {
+    const { formModule, formData, editIndex } = this.state;
+    if (formModule === 'empleados') {
+      const nombre = formData.empNombre.trim() || 'Nuevo colaborador';
+      const record = { nombre, cargo: formData.empCargo || 'Sin definir', planta: formData.empPlanta, turno: formData.empTurno, antiguedad: editIndex != null ? this.state.employees[editIndex].antiguedad : '0 meses', salario: formData.empSalario || '$1.423.500', email: formData.empEmail || '—', estado: formData.empEstado };
+      this.setState(s => ({ employees: editIndex != null ? s.employees.map((e, i) => i === editIndex ? record : e) : [...s.employees, record], formModule: null, editIndex: null }));
+    } else if (formModule === 'nomina') {
+      const record = { concepto: formData.nomConcepto.trim() || 'Nuevo concepto', tipo: formData.nomTipo, monto: formData.nomMonto || '$0' };
+      this.setState(s => ({ payrollConcepts: editIndex != null ? s.payrollConcepts.map((c, i) => i === editIndex ? record : c) : [...s.payrollConcepts, record], formModule: null, editIndex: null }));
+    } else if (formModule === 'reclutamiento') {
+      const etapa = formData.recEtapa;
+      this.setState(s => ({ candidateStages: s.candidateStages.map(st => st.label === etapa ? { ...st, candidates: [...st.candidates, { nombre: formData.recNombre.trim() || 'Candidato', fecha: formData.recFecha || 'Hoy' }] } : st), formModule: null, editIndex: null }));
+    } else if (formModule === 'marcacion') {
+      const record = { nombre: formData.marNombre.trim() || 'Colaborador', turno: formData.marTurno, entrada: formData.marEntrada || '—', salida: formData.marSalida || '—', estado: formData.marEstado };
+      this.setState(s => ({ attendance: editIndex != null ? s.attendance.map((a, i) => i === editIndex ? record : a) : [...s.attendance, record], formModule: null, editIndex: null }));
+    } else if (formModule === 'desempeno') {
+      const record = { nombre: formData.desNombre.trim() || 'Colaborador', cargo: formData.desCargo || 'Sin definir', puntaje: formData.desPuntaje || '4.0', competencias: [{ nombre: 'Calidad de trabajo', valor: Number(formData.desComp1) || 80 }, { nombre: 'Puntualidad', valor: Number(formData.desComp2) || 80 }, { nombre: 'Trabajo en equipo', valor: Number(formData.desComp3) || 80 }] };
+      this.setState(s => ({ evaluations: editIndex != null ? s.evaluations.map((e, i) => i === editIndex ? record : e) : [...s.evaluations, record], formModule: null, editIndex: null }));
+    }
+  };
+
+  renderVals() {
+    const m = this.state.activeModule;
+    const employees = this.state.employees.map((e, idx) => {
+      const b = EMP_BADGE[e.estado] || EMP_BADGE.Activo;
+      return { ...e, iniciales: e.nombre.split(' ').map(w => w[0]).slice(0, 2).join(''), estadoBg: b.bg, estadoColor: b.color, onOpen: () => this.openEmployee(e), onEdit: (ev) => { ev.stopPropagation(); this.editEmployee(idx); }, onDelete: (ev) => { ev.stopPropagation(); this.deleteEmployee(idx); } };
+    });
+    const attendance = this.state.attendance.map((a, idx) => {
+      const b = ATT_BADGE[a.estado] || ATT_BADGE['A tiempo'];
+      return { ...a, estadoBg: b.bg, estadoColor: b.color, onEdit: () => this.editAttendance(idx), onDelete: () => this.deleteAttendance(idx) };
+    });
+    const payrollConcepts = this.state.payrollConcepts.map((c, idx) => ({ ...c, onEdit: () => this.editPayroll(idx), onDelete: () => this.deletePayroll(idx) }));
+    const evaluations = this.state.evaluations.map((ev, idx) => ({ ...ev, onEdit: () => this.editEvaluation(idx), onDelete: () => this.deleteEvaluation(idx) }));
+    const candidateStages = this.state.candidateStages.map((st, si) => ({ ...st, candidates: st.candidates.map((c, ci) => ({ ...c, onDelete: () => this.deleteCandidate(si, ci) })) }));
+
+    const navItems = NAV.map(n => ({ ...n, bg: m === n.id ? 'oklch(0.22 0.02 230)' : 'transparent', textOpacity: m === n.id ? 1 : 0.85, onSelect: () => this.selectModule(n.id) }));
+
+    const plantGroups = countBy(employees, e => e.planta);
+    const maxCount = Math.max(...Object.values(plantGroups), 1);
+    const plantBars = Object.entries(plantGroups).map(([label, value]) => ({ label, value, pct: Math.round((value / maxCount) * 100) }));
+
+    const estadoCounts = countBy(employees, e => e.estado);
+    const estadoDonut = buildDonut(estadoCounts, ESTADO_COLORS);
+
+    const turnoCounts = countBy(employees, e => e.turno);
+    const maxTurno = Math.max(...Object.values(turnoCounts), 1);
+    const turnoBars = Object.entries(turnoCounts).map(([label, count]) => ({ label, count, pct: Math.round((count / maxTurno) * 100) }));
+
+    const devengadoTotal = this.state.payrollConcepts.filter(c => c.tipo === 'Devengado').reduce((s, c) => s + parseMonto(c.monto), 0);
+    const deduccionTotal = Math.abs(this.state.payrollConcepts.filter(c => c.tipo === 'Deducción').reduce((s, c) => s + parseMonto(c.monto), 0));
+    const maxComp = Math.max(devengadoTotal, deduccionTotal, 1);
+    const payrollCompare = { devengado: formatMonto(devengadoTotal), deducciones: formatMonto(-deduccionTotal), devengadoPct: Math.round((devengadoTotal / maxComp) * 100), deduccionesPct: Math.round((deduccionTotal / maxComp) * 100) };
+
+    const payrollTotal = formatMonto(this.state.payrollConcepts.reduce((sum, c) => sum + parseMonto(c.monto), 0));
+    const payrollStatus = this.state.payrollStatus;
+    const isProc = payrollStatus === 'procesado';
+
+    const reciboIdx = this.state.reciboEmployeeIdx;
+    const reciboEmp = (reciboIdx != null && this.state.employees[reciboIdx]) ? this.state.employees[reciboIdx] : null;
+    let recibo = null;
+    if (reciboEmp) {
+      const base = parseMonto(reciboEmp.salario);
+      const aux = 140606;
+      const salud = Math.round(base * 0.04);
+      const pension = Math.round(base * 0.04);
+      const neto = base + aux - salud - pension;
+      recibo = { nombre: reciboEmp.nombre, cargo: reciboEmp.cargo, planta: reciboEmp.planta, base: formatMonto(base), aux: formatMonto(aux), salud: formatMonto(-salud), pension: formatMonto(-pension), neto: formatMonto(neto) };
+    }
+    const employeeOptions = this.state.employees.map((e, idx) => ({ idx, nombre: e.nombre }));
+
+    const formModule = this.state.formModule;
+    const editIndex = this.state.editIndex;
+    const formTitle = editIndex != null ? (FORM_TITLES_EDIT[formModule] || '') : (FORM_TITLES_NEW[formModule] || '');
+
+    return {
+      activeModule: m,
+      activeLabel: LABELS[m],
+      isDashboard: m === 'dashboard', isEmpleados: m === 'empleados',
+      isNomina: m === 'nomina', isReclutamiento: m === 'reclutamiento', isMarcacion: m === 'marcacion', isDesempeno: m === 'desempeno',
+      navItems, selectModule: this.selectModule,
+      employees, openEmployee: this.openEmployee, closeDrawer: this.closeDrawer, stopProp: this.stopProp,
+      selectedEmployee: this.state.selectedEmployee || {}, drawerOpen: this.state.drawerOpen,
+      execKpis: [
+        { label: 'Headcount total', value: String(employees.length), trend: 'en vivo', trendColor: 'oklch(0.5 0.12 150)' },
+        { label: 'Rotación anual', value: '8.4%', trend: '-1.2pp vs. 2025', trendColor: 'oklch(0.5 0.12 150)' },
+        { label: 'Ausentismo mensual', value: '3.1%', trend: '+0.4pp vs. mes anterior', trendColor: 'oklch(0.6 0.14 40)' },
+        { label: 'Costo de nómina mensual', value: payrollTotal, trend: 'en vivo', trendColor: 'oklch(0.5 0.12 150)' },
+      ],
+      plantBars, estadoDonutStyle: estadoDonut.style, estadoLegend: estadoDonut.legend, turnoBars, payrollCompare,
+      payrollConcepts, payrollTotal,
+      payrollStatus, procesarNomina: this.procesarNomina,
+      payrollButtonLabel: isProc ? 'Reabrir ciclo' : 'Procesar nómina',
+      payrollStatusLabel: isProc ? 'Procesado' : 'Pendiente de aprobación',
+      payrollStatusBg: isProc ? 'oklch(0.93 0.06 150)' : 'oklch(0.94 0.06 80)',
+      payrollStatusColor: isProc ? 'oklch(0.4 0.1 150)' : 'oklch(0.5 0.1 80)',
+      reciboEmployeeIdx: reciboIdx == null ? '' : reciboIdx, onReciboChange: this.onReciboChange, employeeOptions, hasRecibo: !!recibo, recibo: recibo || {}, printRecibo: this.printRecibo,
+      candidateStages, attendance, evaluations,
+
+      formOpen: !!formModule, formModule, formTitle, formSubtitle: FORM_SUBTITLES[formModule] || '',
+      isFormEmpleados: formModule === 'empleados', isFormNomina: formModule === 'nomina',
+      isFormReclutamiento: formModule === 'reclutamiento', isFormMarcacion: formModule === 'marcacion', isFormDesempeno: formModule === 'desempeno',
+      formData: this.state.formData, openForm: this.openForm, closeForm: this.closeForm, setField: this.setField, submitForm: this.submitForm,
+      openFormEmpleados: this.openFormEmpleados, openFormNomina: this.openFormNomina, openFormReclutamiento: this.openFormReclutamiento,
+      openFormMarcacion: this.openFormMarcacion, openFormDesempeno: this.openFormDesempeno,
+      onEmpNombre: this.onEmpNombre, onEmpCargo: this.onEmpCargo, onEmpPlanta: this.onEmpPlanta, onEmpTurno: this.onEmpTurno,
+      onEmpSalario: this.onEmpSalario, onEmpEmail: this.onEmpEmail, onEmpEstado: this.onEmpEstado,
+      onNomConcepto: this.onNomConcepto, onNomTipo: this.onNomTipo, onNomMonto: this.onNomMonto,
+      onRecNombre: this.onRecNombre, onRecEtapa: this.onRecEtapa, onRecFecha: this.onRecFecha,
+      onMarNombre: this.onMarNombre, onMarTurno: this.onMarTurno, onMarEntrada: this.onMarEntrada, onMarSalida: this.onMarSalida, onMarEstado: this.onMarEstado,
+      onDesNombre: this.onDesNombre, onDesCargo: this.onDesCargo, onDesPuntaje: this.onDesPuntaje,
+      onDesComp1: this.onDesComp1, onDesComp2: this.onDesComp2, onDesComp3: this.onDesComp3,
+    };
+  }
+}
+</script>
+</body>
+</html>
