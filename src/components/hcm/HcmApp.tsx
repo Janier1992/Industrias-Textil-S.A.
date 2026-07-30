@@ -13,7 +13,11 @@ import { Reclutamiento } from "./modules/Reclutamiento";
 import { Marcacion } from "./modules/Marcacion";
 import { Desempeno } from "./modules/Desempeno";
 
-export function HcmApp() {
+interface HcmAppProps {
+  onLogout?: () => void;
+}
+
+export function HcmApp({ onLogout }: HcmAppProps) {
   const { state } = useHcm();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -35,6 +39,7 @@ export function HcmApp() {
         <Topbar
           sidebarCollapsed={sidebarCollapsed}
           onToggleSidebar={() => setSidebarCollapsed((prev) => !prev)}
+          onLogout={onLogout}
         />
         <main
           className="main-content-area"

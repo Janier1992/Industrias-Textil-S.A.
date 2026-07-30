@@ -6,9 +6,10 @@ import { useHcm } from "@/store/HcmStore";
 interface TopbarProps {
   sidebarCollapsed?: boolean;
   onToggleSidebar?: () => void;
+  onLogout?: () => void;
 }
 
-export function Topbar({ sidebarCollapsed = false, onToggleSidebar }: TopbarProps) {
+export function Topbar({ sidebarCollapsed = false, onToggleSidebar, onLogout }: TopbarProps) {
   const { state } = useHcm();
 
   return (
@@ -107,6 +108,16 @@ export function Topbar({ sidebarCollapsed = false, onToggleSidebar }: TopbarProp
         >
           RH
         </div>
+        {onLogout && (
+          <button
+            onClick={onLogout}
+            className="btn btn-ghost hide-on-mobile"
+            style={{ padding: "7px 12px", fontSize: 12.5 }}
+            title="Cerrar sesión"
+          >
+            Salir
+          </button>
+        )}
       </div>
     </header>
   );
