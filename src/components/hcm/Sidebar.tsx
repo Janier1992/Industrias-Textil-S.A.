@@ -140,21 +140,6 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
           );
         })}
       </nav>
-
-      {/* Footer Info */}
-      <div
-        style={{
-          padding: collapsed ? "14px 0" : "14px 16px",
-          borderTop: "1px solid var(--sidebar-border)",
-          fontSize: 11,
-          color: "var(--sidebar-muted-2)",
-          textAlign: collapsed ? "center" : "left",
-          whiteSpace: "nowrap",
-          overflow: "hidden",
-        }}
-      >
-        {!collapsed ? "Planta Bogotá · Multisede activa" : "BOG"}
-      </div>
     </aside>
   );
 }
