@@ -246,6 +246,12 @@ textarea {
   }
 }
 
+@media (min-width: 768px) {
+  .bottomnav-mobile {
+    display: none !important;
+  }
+}
+
 @keyframes modalFadeIn {
   from {
     opacity: 0;

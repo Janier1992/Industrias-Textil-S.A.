@@ -8,7 +8,7 @@ export function BottomNav() {
 
   return (
     <div
-      className="md:hidden no-print"
+      className="bottomnav-mobile no-print"
       style={{
         position: "fixed",
         bottom: 0,
