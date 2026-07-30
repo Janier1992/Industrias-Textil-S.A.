@@ -75,7 +75,7 @@ export function LoginScreen({ onSuccess }: LoginScreenProps) {
             INDUSTRIAS TEXTIL
           </div>
           <div style={{ fontSize: 19, fontWeight: 700, marginTop: 2, color: "var(--text)" }}>
-            ERP · HCM
+            Sistema RR.HH
           </div>
           <div style={{ fontSize: 12.5, color: "var(--text-muted)", marginTop: 6 }}>
             Inicia sesión para continuar

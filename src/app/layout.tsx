@@ -15,7 +15,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Industrias Textil · ERP HCM",
+  title: "Industrias Textil · Sistema RR.HH",
   description: "Sistema de Gestión de Recursos Humanos — Industrias Textil",
 };
 

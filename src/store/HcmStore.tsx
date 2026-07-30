@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useReducer, type Dispatch, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useReducer, type Dispatch, type ReactNode } from "react";
 import {
   SEED_ATTENDANCE,
   SEED_CANDIDATE_STAGES,
@@ -43,6 +43,27 @@ const initialState: HcmState = {
   drawerOpen: false,
   reciboEmployeeId: null,
 };
+
+const STORAGE_KEY = "hcm_records_v1";
+
+type PersistedRecords = Pick<
+  HcmState,
+  "employees" | "payrollConcepts" | "candidateStages" | "attendance" | "evaluations" | "payrollStatus"
+>;
+
+function loadPersistedRecords(): Partial<PersistedRecords> {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as Partial<PersistedRecords>) : {};
+  } catch {
+    return {};
+  }
+}
+
+function buildInitialState(): HcmState {
+  return { ...initialState, ...loadPersistedRecords() };
+}
 
 export type HcmAction =
   | { type: "SELECT_MODULE"; module: ModuleId }
@@ -155,7 +176,20 @@ function hcmReducer(state: HcmState, action: HcmAction): HcmState {
 const HcmContext = createContext<{ state: HcmState; dispatch: Dispatch<HcmAction> } | null>(null);
 
 export function HcmProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(hcmReducer, initialState);
+  const [state, dispatch] = useReducer(hcmReducer, undefined, buildInitialState);
+
+  useEffect(() => {
+    const records: PersistedRecords = {
+      employees: state.employees,
+      payrollConcepts: state.payrollConcepts,
+      candidateStages: state.candidateStages,
+      attendance: state.attendance,
+      evaluations: state.evaluations,
+      payrollStatus: state.payrollStatus,
+    };
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+  }, [state.employees, state.payrollConcepts, state.candidateStages, state.attendance, state.evaluations, state.payrollStatus]);
+
   return <HcmContext.Provider value={{ state, dispatch }}>{children}</HcmContext.Provider>;
 }
 
