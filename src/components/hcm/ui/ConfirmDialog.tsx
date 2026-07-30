@@ -34,7 +34,7 @@ export function ConfirmDialog({
       <div
         onClick={(e) => e.stopPropagation()}
         className="card"
-        style={{ width: 360, padding: "22px 24px" }}
+        style={{ width: "min(360px, calc(100vw - 32px))", padding: "20px 20px" }}
       >
         <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 8 }}>{title}</div>
         <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 20, lineHeight: 1.5 }}>

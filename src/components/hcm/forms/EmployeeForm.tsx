@@ -82,7 +82,7 @@ export function EmployeeForm({ initial, onSubmit, onCancel }: EmployeeFormProps)
       </div>
 
       <div className="section-label">DATOS LABORALES</div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12, marginBottom: 12 }}>
         <div className="field" style={{ marginBottom: 0 }}>
           <label>
             Cargo

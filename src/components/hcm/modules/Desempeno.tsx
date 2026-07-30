@@ -5,7 +5,7 @@ import { nextId } from "@/lib/format";
 import type { Evaluation } from "@/lib/types";
 import { useHcm } from "@/store/HcmStore";
 import { ConfirmDialog } from "../ui/ConfirmDialog";
-import { SlideOver } from "../ui/SlideOver";
+import { FloatingModal } from "../ui/FloatingModal";
 import { EvaluationForm, type EvaluationDraft } from "../forms/EvaluationForm";
 
 export function Desempeno() {
@@ -52,14 +52,14 @@ export function Desempeno() {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18, flexWrap: "wrap", gap: 12 }}>
         <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>Desempeño · Ciclo 2026-S1</h1>
         <button className="btn btn-primary" onClick={openCreate}>
           + Nueva evaluación
         </button>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 14 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 14 }}>
         {state.evaluations.map((ev) => (
           <div key={ev.id} className="card" style={{ padding: "18px 20px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
@@ -96,18 +96,15 @@ export function Desempeno() {
         ))}
       </div>
 
-      <SlideOver open={formOpen} onClose={closeForm} width={440} zIndex={25}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-          <div style={{ fontSize: 17, fontWeight: 700 }}>{editing ? "Editar evaluación" : "Nueva evaluación"}</div>
-          <button onClick={closeForm} style={{ all: "unset", cursor: "pointer", fontSize: 20, color: "var(--text-muted)", lineHeight: 1 }}>
-            ×
-          </button>
-        </div>
-        <div style={{ fontSize: 12.5, color: "var(--text-muted)", marginBottom: 14 }}>
-          Registra la evaluación de desempeño de un colaborador.
-        </div>
+      <FloatingModal
+        open={formOpen}
+        onClose={closeForm}
+        title={editing ? "Editar evaluación" : "Nueva evaluación"}
+        subtitle="Registra la evaluación de desempeño de un colaborador."
+        maxWidth={480}
+      >
         <EvaluationForm initial={editingDraft} onSubmit={handleSubmit} onCancel={closeForm} />
-      </SlideOver>
+      </FloatingModal>
 
       <ConfirmDialog
         open={!!pendingDeleteId}

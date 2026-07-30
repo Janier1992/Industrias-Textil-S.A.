@@ -4,7 +4,7 @@ import { useState } from "react";
 import { nextId } from "@/lib/format";
 import { useHcm } from "@/store/HcmStore";
 import { ConfirmDialog } from "../ui/ConfirmDialog";
-import { SlideOver } from "../ui/SlideOver";
+import { FloatingModal } from "../ui/FloatingModal";
 import { CandidateForm, type CandidateDraft } from "../forms/CandidateForm";
 
 export function Reclutamiento() {
@@ -19,7 +19,7 @@ export function Reclutamiento() {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6, flexWrap: "wrap", gap: 12 }}>
         <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>Reclutamiento y Onboarding</h1>
         <button className="btn btn-primary" onClick={() => setFormOpen(true)}>
           + Nuevo candidato
@@ -29,55 +29,54 @@ export function Reclutamiento() {
         Vacante activa: Operario(a) de Costura Industrial — Planta Confección Bogotá
       </p>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 12 }}>
-        {state.candidateStages.map((stage) => (
-          <div key={stage.label}>
-            <div style={{ fontSize: 11.5, fontWeight: 700, color: "var(--text-muted)", marginBottom: 10 }}>
-              {stage.label} · {stage.candidates.length}
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {stage.candidates.map((cand) => (
-                <div
-                  key={cand.id}
-                  className="card"
-                  style={{ position: "relative", padding: 12 }}
-                >
-                  <button
-                    onClick={() => setPending({ stageLabel: stage.label, id: cand.id, nombre: cand.nombre })}
-                    style={{
-                      all: "unset",
-                      cursor: "pointer",
-                      position: "absolute",
-                      top: 8,
-                      right: 10,
-                      fontSize: 14,
-                      color: "var(--text-muted)",
-                      lineHeight: 1,
-                    }}
+      <div className="table-responsive" style={{ paddingBottom: 12 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(5, minmax(210px, 1fr))", gap: 12, minWidth: 1050 }}>
+          {state.candidateStages.map((stage) => (
+            <div key={stage.label}>
+              <div style={{ fontSize: 11.5, fontWeight: 700, color: "var(--text-muted)", marginBottom: 10 }}>
+                {stage.label} · {stage.candidates.length}
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {stage.candidates.map((cand) => (
+                  <div
+                    key={cand.id}
+                    className="card"
+                    style={{ position: "relative", padding: 12 }}
                   >
-                    ×
-                  </button>
-                  <div style={{ fontSize: 13, fontWeight: 600, paddingRight: 14 }}>{cand.nombre}</div>
-                  <div style={{ fontSize: 11.5, color: "var(--text-muted)", marginTop: 3 }}>{cand.fecha}</div>
-                </div>
-              ))}
+                    <button
+                      onClick={() => setPending({ stageLabel: stage.label, id: cand.id, nombre: cand.nombre })}
+                      style={{
+                        all: "unset",
+                        cursor: "pointer",
+                        position: "absolute",
+                        top: 8,
+                        right: 10,
+                        fontSize: 14,
+                        color: "var(--text-muted)",
+                        lineHeight: 1,
+                      }}
+                    >
+                      ×
+                    </button>
+                    <div style={{ fontSize: 13, fontWeight: 600, paddingRight: 14 }}>{cand.nombre}</div>
+                    <div style={{ fontSize: 11.5, color: "var(--text-muted)", marginTop: 3 }}>{cand.fecha}</div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
-      <SlideOver open={formOpen} onClose={() => setFormOpen(false)} width={440} zIndex={25}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-          <div style={{ fontSize: 17, fontWeight: 700 }}>Nuevo candidato</div>
-          <button onClick={() => setFormOpen(false)} style={{ all: "unset", cursor: "pointer", fontSize: 20, color: "var(--text-muted)", lineHeight: 1 }}>
-            ×
-          </button>
-        </div>
-        <div style={{ fontSize: 12.5, color: "var(--text-muted)", marginBottom: 14 }}>
-          Añade un candidato a la etapa correspondiente del proceso.
-        </div>
+      <FloatingModal
+        open={formOpen}
+        onClose={() => setFormOpen(false)}
+        title="Nuevo candidato"
+        subtitle="Añade un candidato a la etapa correspondiente del proceso."
+        maxWidth={460}
+      >
         <CandidateForm defaultEtapa={state.candidateStages[0].label} onSubmit={handleSubmit} onCancel={() => setFormOpen(false)} />
-      </SlideOver>
+      </FloatingModal>
 
       <ConfirmDialog
         open={!!pending}

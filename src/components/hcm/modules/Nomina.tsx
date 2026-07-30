@@ -6,7 +6,7 @@ import { formatMonto, nextId, parseMonto } from "@/lib/format";
 import type { PayrollConcept } from "@/lib/types";
 import { useHcm } from "@/store/HcmStore";
 import { ConfirmDialog } from "../ui/ConfirmDialog";
-import { SlideOver } from "../ui/SlideOver";
+import { FloatingModal } from "../ui/FloatingModal";
 import { PayrollForm, type PayrollDraft } from "../forms/PayrollForm";
 
 const COLUMNS = "2fr 1fr 1fr 1fr";
@@ -66,9 +66,9 @@ export function Nomina() {
 
   return (
     <div style={{ maxWidth: 900 }}>
-      <div className="no-print" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
+      <div className="no-print" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18, flexWrap: "wrap", gap: 12 }}>
         <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>Nómina · Julio 2026</h1>
-        <div style={{ display: "flex", gap: 10 }}>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
           <button className="btn btn-secondary" onClick={openCreate}>
             + Nuevo concepto
           </button>
@@ -80,7 +80,7 @@ export function Nomina() {
 
       <div
         className="card no-print"
-        style={{ padding: "18px 22px", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}
+        style={{ padding: "18px 22px", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}
       >
         <div style={{ fontSize: 13.5 }}>Estado del ciclo de nómina</div>
         <span
@@ -94,57 +94,59 @@ export function Nomina() {
         </span>
       </div>
 
-      <div className="card no-print" style={{ overflow: "hidden", marginBottom: 24 }}>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: COLUMNS,
-            padding: "11px 20px",
-            fontSize: 11,
-            fontWeight: 600,
-            color: "var(--text-muted)",
-            borderBottom: "1px solid var(--border-light)",
-          }}
-        >
-          <div>Concepto</div>
-          <div>Tipo</div>
-          <div style={{ textAlign: "right" }}>Monto total</div>
-          <div style={{ textAlign: "right" }}>Acciones</div>
-        </div>
-        {state.payrollConcepts.map((c) => (
+      <div className="card no-print table-responsive" style={{ marginBottom: 24 }}>
+        <div style={{ minWidth: 520 }}>
           <div
-            key={c.id}
             style={{
               display: "grid",
               gridTemplateColumns: COLUMNS,
-              padding: "12px 20px",
-              fontSize: 13.5,
-              borderBottom: "1px solid var(--border-lighter)",
-              alignItems: "center",
+              padding: "11px 20px",
+              fontSize: 11,
+              fontWeight: 600,
+              color: "var(--text-muted)",
+              borderBottom: "1px solid var(--border-light)",
             }}
           >
-            <div style={{ fontWeight: 500 }}>{c.concepto}</div>
-            <div style={{ color: "var(--text-muted)" }}>{c.tipo}</div>
+            <div>Concepto</div>
+            <div>Tipo</div>
+            <div style={{ textAlign: "right" }}>Monto total</div>
+            <div style={{ textAlign: "right" }}>Acciones</div>
+          </div>
+          {state.payrollConcepts.map((c) => (
+            <div
+              key={c.id}
+              style={{
+                display: "grid",
+                gridTemplateColumns: COLUMNS,
+                padding: "12px 20px",
+                fontSize: 13.5,
+                borderBottom: "1px solid var(--border-lighter)",
+                alignItems: "center",
+              }}
+            >
+              <div style={{ fontWeight: 500 }}>{c.concepto}</div>
+              <div style={{ color: "var(--text-muted)" }}>{c.tipo}</div>
+              <div className="mono" style={{ textAlign: "right" }}>
+                {c.monto}
+              </div>
+              <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
+                <button className="link-btn link-edit" onClick={() => openEdit(c)}>
+                  Editar
+                </button>
+                <button className="link-btn link-delete" onClick={() => setPendingDeleteId(c.id)}>
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          ))}
+          <div style={{ display: "grid", gridTemplateColumns: COLUMNS, padding: "14px 20px", fontSize: 14, fontWeight: 700, background: "var(--bg)" }}>
+            <div>Total nómina</div>
+            <div />
             <div className="mono" style={{ textAlign: "right" }}>
-              {c.monto}
+              {payrollTotal}
             </div>
-            <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
-              <button className="link-btn link-edit" onClick={() => openEdit(c)}>
-                Editar
-              </button>
-              <button className="link-btn link-delete" onClick={() => setPendingDeleteId(c.id)}>
-                Eliminar
-              </button>
-            </div>
+            <div />
           </div>
-        ))}
-        <div style={{ display: "grid", gridTemplateColumns: COLUMNS, padding: "14px 20px", fontSize: 14, fontWeight: 700, background: "var(--bg)" }}>
-          <div>Total nómina</div>
-          <div />
-          <div className="mono" style={{ textAlign: "right" }}>
-            {payrollTotal}
-          </div>
-          <div />
         </div>
       </div>
 
@@ -178,7 +180,7 @@ export function Nomina() {
         </select>
 
         {recibo && (
-          <div className="print-area" style={{ border: "1px solid var(--border)", borderRadius: 12, padding: "20px 22px", maxWidth: 420 }}>
+          <div className="print-area" style={{ border: "1px solid var(--border)", borderRadius: 12, padding: "20px 22px", maxWidth: 420, width: "100%" }}>
             <div style={{ fontSize: 14, fontWeight: 700 }}>{recibo.nombre}</div>
             <div style={{ fontSize: 12.5, color: "var(--text-muted)", marginBottom: 16 }}>
               {recibo.cargo} · {recibo.planta}
@@ -198,18 +200,15 @@ export function Nomina() {
         )}
       </div>
 
-      <SlideOver open={formOpen} onClose={closeForm} width={440} zIndex={25}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-          <div style={{ fontSize: 17, fontWeight: 700 }}>{editing ? "Editar concepto salarial" : "Nuevo concepto salarial"}</div>
-          <button onClick={closeForm} style={{ all: "unset", cursor: "pointer", fontSize: 20, color: "var(--text-muted)", lineHeight: 1 }}>
-            ×
-          </button>
-        </div>
-        <div style={{ fontSize: 12.5, color: "var(--text-muted)", marginBottom: 14 }}>
-          Agrega un concepto devengado o de deducción al ciclo actual.
-        </div>
+      <FloatingModal
+        open={formOpen}
+        onClose={closeForm}
+        title={editing ? "Editar concepto salarial" : "Nuevo concepto salarial"}
+        subtitle="Agrega un concepto devengado o de deducción al ciclo actual."
+        maxWidth={460}
+      >
         <PayrollForm initial={editing ?? undefined} onSubmit={handleSubmit} onCancel={closeForm} />
-      </SlideOver>
+      </FloatingModal>
 
       <ConfirmDialog
         open={!!pendingDeleteId}

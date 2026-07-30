@@ -61,7 +61,7 @@ export function Dashboard() {
     <div>
       <h1 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 20px" }}>Dashboard Ejecutivo</h1>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 14, marginBottom: 18 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14, marginBottom: 18 }}>
         {execKpis.map((k) => (
           <Card key={k.label} style={{ padding: "16px 18px" }}>
             <div style={{ fontSize: 11, color: "var(--text-muted)", marginBottom: 6 }}>{k.label}</div>
@@ -73,7 +73,7 @@ export function Dashboard() {
         ))}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 14, marginBottom: 14 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 14, marginBottom: 14 }}>
         <Card>
           <h2 style={{ fontSize: 14, fontWeight: 700, margin: "0 0 16px" }}>Headcount por planta (en vivo)</h2>
           <div style={{ display: "flex", alignItems: "flex-end", gap: 20, height: 160 }}>
@@ -126,7 +126,7 @@ export function Dashboard() {
         </Card>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: 14, marginBottom: 14 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 14, marginBottom: 14 }}>
         <Card style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <h2 style={{ fontSize: 14, fontWeight: 700, margin: "0 0 16px", alignSelf: "flex-start" }}>Estado del personal</h2>
           <div style={{ width: 130, height: 130, borderRadius: "50%", background: estadoDonut.gradient, marginBottom: 14 }} />

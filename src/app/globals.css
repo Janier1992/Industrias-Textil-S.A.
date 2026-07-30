@@ -221,6 +221,51 @@ textarea {
   background: var(--sidebar-active) !important;
 }
 
+/* Responsive utilities */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.main-content-area {
+  padding: 16px 14px 84px;
+}
+@media (min-width: 768px) {
+  .main-content-area {
+    padding: 28px 32px 60px;
+  }
+}
+
+@media (max-width: 767px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+  .sidebar-desktop {
+    display: none !important;
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
 @media print {
   body * {
     visibility: hidden;
@@ -239,3 +284,4 @@ textarea {
     display: none !important;
   }
 }
+

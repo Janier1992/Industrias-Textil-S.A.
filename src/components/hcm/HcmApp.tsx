@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { useHcm } from "@/store/HcmStore";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
+import { BottomNav } from "./BottomNav";
 import { EmployeeDetailDrawer } from "./EmployeeDetailDrawer";
 import { Dashboard } from "./modules/Dashboard";
 import { Empleados } from "./modules/Empleados";
@@ -13,6 +15,7 @@ import { Desempeno } from "./modules/Desempeno";
 
 export function HcmApp() {
   const { state } = useHcm();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
     <div
@@ -23,22 +26,33 @@ export function HcmApp() {
         background: "var(--bg)",
         color: "var(--text)",
         overflow: "hidden",
+        position: "relative",
       }}
     >
-      <Sidebar />
+      <Sidebar collapsed={sidebarCollapsed} />
 
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
-        <Topbar />
-        <div style={{ flex: 1, overflowY: "auto", padding: "28px 32px 60px" }}>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, height: "100%" }}>
+        <Topbar
+          sidebarCollapsed={sidebarCollapsed}
+          onToggleSidebar={() => setSidebarCollapsed((prev) => !prev)}
+        />
+        <main
+          className="main-content-area"
+          style={{
+            flex: 1,
+            overflowY: "auto",
+          }}
+        >
           {state.activeModule === "dashboard" && <Dashboard />}
           {state.activeModule === "empleados" && <Empleados />}
           {state.activeModule === "nomina" && <Nomina />}
           {state.activeModule === "reclutamiento" && <Reclutamiento />}
           {state.activeModule === "marcacion" && <Marcacion />}
           {state.activeModule === "desempeno" && <Desempeno />}
-        </div>
+        </main>
       </div>
 
+      <BottomNav />
       <EmployeeDetailDrawer />
     </div>
   );

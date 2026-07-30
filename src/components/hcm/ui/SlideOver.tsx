@@ -27,11 +27,12 @@ export function SlideOver({ open, onClose, width = 400, children, zIndex = 20 }:
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          width,
+          width: `min(100vw, ${width}px)`,
+          maxWidth: "100vw",
           height: "100%",
           background: "var(--surface)",
           boxShadow: "var(--drawer-shadow)",
-          padding: "28px 26px",
+          padding: "24px 20px",
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",

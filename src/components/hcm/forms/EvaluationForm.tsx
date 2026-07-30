@@ -61,7 +61,7 @@ export function EvaluationForm({ initial, onSubmit, onCancel }: EvaluationFormPr
 
   return (
     <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12, marginBottom: 12 }}>
         <div className="field" style={{ marginBottom: 0 }}>
           <label>
             Colaborador
@@ -87,7 +87,7 @@ export function EvaluationForm({ initial, onSubmit, onCancel }: EvaluationFormPr
 
       <div className="section-label">COMPETENCIAS</div>
       {draft.competencias.map((comp, idx) => (
-        <div key={idx} style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 12, marginBottom: 10 }}>
+        <div key={idx} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 12, marginBottom: 10 }}>
           <div className="field" style={{ marginBottom: 0 }}>
             <label style={{ fontSize: 11.5 }}>
               Nombre de la competencia
