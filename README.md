@@ -1,7 +1,7 @@
 # Handoff: ERP HCM — Industrias Textil (Prototipo interactivo)
 
 ## Overview
-Prototipo interactivo de un ERP de Recursos Humanos (HCM) para Industrias Textil, empresa de manufactura textil con 2 plantas (Bogotá y Medellín). Cubre 5 módulos operativos: Dashboard Ejecutivo, Empleados, Nómina, Reclutamiento y Onboarding, Marcación y Asistencia, y Desempeño.
+Prototipo interactivo de un ERP de Recursos, empresa de manufactura. Cubre 5 módulos operativos: Dashboard Ejecutivo, Empleados, Nómina, Reclutamiento y Onboarding, Marcación y Asistencia, y Desempeño.
 
 ## About the Design Files
 The file in this bundle (`ERP HCM.dc.html`) is a **design reference built in HTML/React** — a working prototype showing intended layout, data, and interactions, not production code to copy directly. It uses a proprietary lightweight component runtime (template holes, `sc-for`/`sc-if` control-flow tags, a `DCLogic` class) that only runs inside the design tool it was built in — **it will not run standalone in a normal browser/dev environment**. Treat it as a functional spec: recreate the same screens, data model, and interactions in the target codebase's actual stack (React/Vue/Angular, or the framework you choose if starting fresh), using that stack's real state management, forms, and component patterns.
